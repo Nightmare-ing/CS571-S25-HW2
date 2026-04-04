@@ -20,5 +20,5 @@ fetch("https://cs571.org/rest/s25/hw2/students", {
 })
     .then((response) => response.json())
     .then((data) => {
-        console.log(data);
+        document.getElementById("num-results").innerText = data.length;
     });

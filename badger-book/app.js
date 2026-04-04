@@ -26,24 +26,27 @@ fetch("https://cs571.org/rest/s25/hw2/students", {
         // Display students
         const stusNode = document.getElementById("students");
         for (stu of data) {
+            const stuNode = document.createElement("div");
+            stuNode.className =
+                "col-xs-12 col-sm-12 col-md-6 col-lg-4 col-xl-3";
             const nameNode = document.createElement("h2");
             nameNode.innerText = `${stu.name.first} ${stu.name.last}`;
-            stusNode.appendChild(nameNode);
+            stuNode.appendChild(nameNode);
 
             const majorNode = document.createElement("p");
             const emMajorNode = document.createElement("strong");
             emMajorNode.innerText = stu.major;
             majorNode.appendChild(emMajorNode);
-            stusNode.appendChild(majorNode);
+            stuNode.appendChild(majorNode);
 
             const numOfCredsAndHometownNode = document.createElement("p");
             const isOrNotFromWi = stu.fromWisconsin ? "is" : "is not";
             numOfCredsAndHometownNode.innerText = `${stu.name.first} is taking ${stu.numCredits} and ${isOrNotFromWi} from Wisconsin.`;
-            stusNode.appendChild(numOfCredsAndHometownNode);
+            stuNode.appendChild(numOfCredsAndHometownNode);
 
             const interestsNode = document.createElement("p");
             interestsNode.innerText = `They have ${stu.interests.length} including...`;
-            stusNode.appendChild(interestsNode);
+            stuNode.appendChild(interestsNode);
 
             const interestsListNode = document.createElement("ul");
             stu.interests.map((interest) => {
@@ -51,6 +54,8 @@ fetch("https://cs571.org/rest/s25/hw2/students", {
                 itemNode.innerText = interest;
                 interestsListNode.appendChild(itemNode);
             });
-            stusNode.appendChild(interestsListNode);
+            stuNode.appendChild(interestsListNode);
+
+            stusNode.appendChild(stuNode);
         }
     });

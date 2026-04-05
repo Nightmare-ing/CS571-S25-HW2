@@ -34,6 +34,7 @@ function buildStudents(studs) {
         stu.interests.map((interest) => {
             const itemNode = document.createElement("li");
             itemNode.innerText = interest;
+            itemNode.addEventListener("click", similarSearch);
             interestsListNode.appendChild(itemNode);
         });
         stuNode.appendChild(interestsListNode);
@@ -44,7 +45,32 @@ function buildStudents(studs) {
 
 function handleSearch(e) {
     e?.preventDefault(); // You can ignore this; prevents the default form submission!
+    buildStudents(filterData(DATA));
+}
 
+document.getElementById("search-btn").addEventListener("click", handleSearch);
+
+fetch("https://cs571.org/rest/s25/hw2/students", {
+    method: "GET",
+    headers: {
+        "X-CS571-ID": CS571.getBadgerId(),
+    },
+})
+    .then((response) => response.json())
+    .then((data) => {
+        DATA = data;
+        buildStudents(data);
+    });
+
+function similarSearch(e) {
+    const selectedText = e.target.innerText;
+    document.getElementById("search-name").value = "";
+    document.getElementById("search-major").value = "";
+    document.getElementById("search-interest").value = selectedText;
+    buildStudents(filterData(DATA));
+}
+
+function filterData(data) {
     const searchName = document
         .getElementById("search-name")
         .value.toLowerCase()
@@ -58,7 +84,6 @@ function handleSearch(e) {
         .value.toLowerCase()
         .trim();
 
-    let data = JSON.parse(JSON.stringify(DATA));
     if (searchName) {
         data = data.filter((item) =>
             `${item.name.first.toLowerCase()} ${item.name.last.toLowerCase()}`.includes(
@@ -81,20 +106,5 @@ function handleSearch(e) {
                 ).length,
         );
     }
-
-    buildStudents(data);
+    return data;
 }
-
-document.getElementById("search-btn").addEventListener("click", handleSearch);
-
-fetch("https://cs571.org/rest/s25/hw2/students", {
-    method: "GET",
-    headers: {
-        "X-CS571-ID": CS571.getBadgerId(),
-    },
-})
-    .then((response) => response.json())
-    .then((data) => {
-        DATA = data;
-        buildStudents(data);
-    });
